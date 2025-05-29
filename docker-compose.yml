@@ -1,4 +1,10 @@
 version: '3'
+
+networks:
+  notification-worker-nt:
+    name: notification-worker-nt
+    driver: bridge
+
 services:
   db:
     image: mongo
@@ -9,6 +15,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: $DB_USER
       MONGO_INITDB_ROOT_PASSWORD: $DB_PASS
+    networks:
+      - notification-worker-nt
     volumes:
       - ./data:/data/db
 
@@ -20,6 +28,8 @@ services:
     env_file: ./.env
     ports:
       - $WEB_SERVER_PORT:3000
+    networks:
+      - notification-worker-nt
     volumes:
       - .:/app
       - /app/node_modules
