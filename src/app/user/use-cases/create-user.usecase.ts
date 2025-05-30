@@ -1,13 +1,14 @@
 import { ConflictException } from '@nestjs/common';
-import { UserRepository } from 'src/domain/repositories/user.repository';
 import * as bcrypt from 'bcryptjs';
 import { randomUUID } from 'crypto';
-import { User } from 'src/domain/entities/user.entity';
+import { User } from 'src/domain/user/entities/user.entity';
+import { UserRepository } from 'src/domain/user/repositories/user.repository';
+import { CreateUserDTO } from '../dto/user.dto';
 
 export class CreateUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(username: string, password: string): Promise<User> {
+  async execute({ username, password }: CreateUserDTO): Promise<User> {
     const exists = await this.userRepository.findByUsername(username);
     if (exists) throw new ConflictException('User already exists');
 

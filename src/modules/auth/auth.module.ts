@@ -6,9 +6,9 @@ import { LoginUseCase } from 'src/app/auth/use-cases/login.usecase';
 import { UserRepository } from 'src/domain/user/repositories/user.repository';
 import { UserMongoRepository } from 'src/infra/db/mongodb/repositories/user-mongo.repository';
 import { UserSchema } from 'src/infra/db/mongodb/schemas/user.schema';
-import { AuthController } from 'src/interfaces/http/controllers/auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
+import { AuthController } from 'src/interfaces/http/auth/controllers/auth.controller';
 
 @Module({
   imports: [

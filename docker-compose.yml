@@ -34,10 +34,11 @@ services:
       - .:/app
       - /app/node_modules
     environment:
+      - WEB_SERVER_PORT=$WEB_SERVER_PORT
       - DB_USER=$DB_USER
       - DB_PASS=$DB_PASS
       - DB_HOST=$DB_HOST
-      - DB_PORT=$DB_PORT
+      - DB_PORT=27017
       - DB_NAME=$DB_NAME
     depends_on:
       - db
