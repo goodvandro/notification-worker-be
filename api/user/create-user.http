@@ -1,7 +1,6 @@
 POST /users HTTP/1.1
 Host: localhost:3001
 Content-Type: application/json
-tenant-id: empresa-alpha1
 
 {
   "username": "evandro",

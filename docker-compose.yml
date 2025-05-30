@@ -23,11 +23,10 @@ services:
   be:
     build:
       context: .
-    image: notification-worker-be:latest
     container_name: notification-worker-be
     env_file: ./.env
     ports:
-      - $WEB_SERVER_PORT:3000
+      - $WEB_SERVER_PORT:3001
     networks:
       - notification-worker-nt
     volumes:

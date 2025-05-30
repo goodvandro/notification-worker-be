@@ -9,7 +9,6 @@ export class UserController {
 
   @Post()
   async create(@Body() dto: CreateUserDtoValidation) {
-    console.log(dto);
     return this.service.create(dto);
   }
 }
