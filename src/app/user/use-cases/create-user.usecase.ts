@@ -3,7 +3,7 @@ import * as bcrypt from 'bcryptjs';
 import { randomUUID } from 'crypto';
 import { User } from 'src/domain/user/entities/user.entity';
 import { UserRepository } from 'src/domain/user/repositories/user.repository';
-import { CreateUserDTO } from '../dto/user.dto';
+import { CreateUserDTO } from '../dtos/user.dto';
 
 export class CreateUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
