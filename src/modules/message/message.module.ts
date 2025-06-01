@@ -5,10 +5,11 @@ import { ListMessagesUseCase } from 'src/app/message/use-cases/list-messages.use
 import { MessageRepository } from 'src/domain/message/repositories/message.repository';
 import { MessageMongoRepository } from 'src/infra/db/mongodb/repositories/massage-mongo.repository';
 import { MessageSchema } from 'src/infra/db/mongodb/schemas/message.schema';
+import { MessageController } from 'src/interfaces/http/message/controllers/message.controller';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'Message', schema: MessageSchema }])],
-  controllers: [],
+  controllers: [MessageController],
   providers: [
     {
       provide: 'MessageRepository',
