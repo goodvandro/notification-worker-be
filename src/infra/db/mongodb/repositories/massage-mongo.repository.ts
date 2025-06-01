@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { MessageRepository } from 'src/domain/message/repsitories/message.repository';
+import { MessageRepository } from 'src/domain/message/repositories/message.repository';
 import { MessageDocument } from '../schemas/message.schema';
 import { Message } from 'src/domain/message/entities/message.entity';
 
