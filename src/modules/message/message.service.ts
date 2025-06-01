@@ -1,4 +1,6 @@
+import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
+import { Queue } from 'bull';
 import { CreateMessageDTO } from 'src/app/message/dtos/create-message.dto';
 import { CreateMessageUseCase } from 'src/app/message/use-cases/create-message.usecase';
 import { ListMessagesUseCase } from 'src/app/message/use-cases/list-messages.usecase';
@@ -10,10 +12,15 @@ export class MessageService {
   constructor(
     private readonly createMessageUseCase: CreateMessageUseCase,
     private readonly listMessagesUseCase: ListMessagesUseCase,
+    @InjectQueue('messages') private readonly messageQueue: Queue,
   ) {}
 
   async create(data: CreateMessageDTO, user: AuthUser): Promise<Message> {
-    return this.createMessageUseCase.execute(data, user);
+    const msg = await this.createMessageUseCase.execute(data, user);
+
+    // Enqueue the message for processing
+    await this.messageQueue.add('process-message', { messageId: msg.id });
+    return msg;
   }
 
   async findAllByUser(user: AuthUser): Promise<Message[]> {

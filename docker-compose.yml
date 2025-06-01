@@ -9,6 +9,7 @@ services:
   db:
     image: mongo
     container_name: notification-worker-db
+    restart: unless-stopped
     env_file: ./.env
     ports:
       - $DB_PORT:27017
@@ -22,12 +23,14 @@ services:
 
   redis:
     image: redis:6-alpine
+    restart: unless-stopped
     container_name: notification-worker-redis
     env_file: ./.env
     ports:
       - $REDIS_PORT:6379
     networks:
       - notification-worker-nt
+  
   be:
     build:
       context: .
@@ -54,6 +57,26 @@ services:
       - redis
     command: npm run start:dev
 
+  worker:
+    build: .
+    container_name: notification-worker-wk
+    command: npm run start:worker
+    env_file: ./.env
+    networks:
+      - notification-worker-nt
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_USER=$DB_USER
+      - DB_PASS=$DB_PASS
+      - DB_HOST=$DB_HOST
+      - DB_PORT=27017
+      - DB_NAME=$DB_NAME
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
 volumes:
   mongo-data:
     name: notification-worker-db-data
