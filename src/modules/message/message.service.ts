@@ -4,6 +4,7 @@ import { Queue } from 'bull';
 import { CreateMessageDTO } from 'src/app/message/dtos/create-message.dto';
 import { CreateMessageUseCase } from 'src/app/message/use-cases/create-message.usecase';
 import { ListMessagesUseCase } from 'src/app/message/use-cases/list-messages.usecase';
+import { UpdateMessageStatusUseCase } from 'src/app/message/use-cases/update-message-status.usecase';
 import { AuthUser } from 'src/domain/auth/types/auth-user.interface';
 import { Message } from 'src/domain/message/entities/message.entity';
 
@@ -12,6 +13,7 @@ export class MessageService {
   constructor(
     private readonly createMessageUseCase: CreateMessageUseCase,
     private readonly listMessagesUseCase: ListMessagesUseCase,
+    private readonly updateMessageStatusUseCase: UpdateMessageStatusUseCase,
     @InjectQueue('messages') private readonly messageQueue: Queue,
   ) {}
 
@@ -25,5 +27,9 @@ export class MessageService {
 
   async findAllByUser(user: AuthUser): Promise<Message[]> {
     return this.listMessagesUseCase.execute(user);
+  }
+
+  async updateStatus(messageId: string, status: string, user: AuthUser): Promise<void> {
+    return this.updateMessageStatusUseCase.execute(messageId, status, user);
   }
 }
