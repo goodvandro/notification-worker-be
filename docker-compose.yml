@@ -18,8 +18,16 @@ services:
     networks:
       - notification-worker-nt
     volumes:
-      - ./data:/data/db
+      - mongo-data:/data:/data/db
 
+  redis:
+    image: redis:6-alpine
+    container_name: notification-worker-redis
+    env_file: ./.env
+    ports:
+      - $REDIS_PORT:6379
+    networks:
+      - notification-worker-nt
   be:
     build:
       context: .
@@ -39,6 +47,13 @@ services:
       - DB_HOST=$DB_HOST
       - DB_PORT=27017
       - DB_NAME=$DB_NAME
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
     depends_on:
       - db
+      - redis
     command: npm run start:dev
+
+volumes:
+  mongo-data:
+    name: notification-worker-db-data
