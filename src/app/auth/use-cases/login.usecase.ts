@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { AuthPayload } from 'src/domain/auth/entities/auth-payload.entity';
 import { UserRepository } from 'src/domain/user/repositories/user.repository';
+import { CustomJwtPayload } from '../dto/jwt-payload';
 import { LoginDto } from '../dto/login.dto';
 
 export class LoginUseCase {
@@ -18,8 +19,8 @@ export class LoginUseCase {
     const passwordMatches = await bcrypt.compare(input.password, user.password);
     if (!passwordMatches) throw new UnauthorizedException('Invalid credentials');
 
-    const payload = {
-      sub: user.id,
+    const payload: CustomJwtPayload = {
+      sub: user.id ?? '',
       username: user.username,
     };
 

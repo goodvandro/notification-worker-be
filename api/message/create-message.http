@@ -1,0 +1,9 @@
+POST /messages HTTP/1.1
+Host: localhost:3001
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODM5OWExOTEzZGQ2OTllZDA3MGRkYmIiLCJ1c2VybmFtZSI6ImV2YW5kcm8iLCJpYXQiOjE3NDg3NjgzMzcsImV4cCI6MTc0ODc2OTIzN30.aynYQTW844dxnyzIRwAWmBoCp4IvMpetrHnibD273U0
+
+{
+  "title": "Payment done",
+  "content": "Your payment was done successfully"
+}
