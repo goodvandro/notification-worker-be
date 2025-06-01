@@ -22,7 +22,7 @@ export class AuthController {
       const payload: JwtPayload = this.jwtService.verify(refreshToken);
       const accessToken = this.jwtService.sign(
         {
-          sub: payload.sub,
+          sub: payload.userId,
           username: payload.username,
         },
         { expiresIn: '15m' },

@@ -10,7 +10,6 @@ const getMongoUri = (config: ConfigService) => {
   const dbPort = config.get<string>('DB_PORT', { infer: true }) || '';
   const dbName = config.get<string>('DB_NAME', { infer: true }) || '';
   const uri = `mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}?authSource=admin`;
-  console.log(uri);
   return uri;
 };
 

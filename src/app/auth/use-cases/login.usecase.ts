@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { AuthPayload } from 'src/domain/auth/entities/auth-payload.entity';
 import { UserRepository } from 'src/domain/user/repositories/user.repository';
 import { LoginDto } from '../dto/login.dto';
-import { JwtPayload } from '../dto/jwt-payload';
 
 export class LoginUseCase {
   constructor(
@@ -20,7 +18,7 @@ export class LoginUseCase {
     const passwordMatches = await bcrypt.compare(input.password, user.password);
     if (!passwordMatches) throw new UnauthorizedException('Invalid credentials');
 
-    const payload: JwtPayload = {
+    const payload = {
       sub: user.id,
       username: user.username,
     };
