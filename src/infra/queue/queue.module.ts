@@ -1,6 +1,7 @@
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
-import { MessageProcessor } from './message.processor';
+import { MessageModule } from 'src/modules/message/message.module';
+import { MessageProcessor } from 'src/infra/queue/message.processor';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MessageProcessor } from './message.processor';
     BullModule.registerQueue({
       name: 'messages',
     }),
+    MessageModule,
   ],
   providers: [MessageProcessor],
   exports: [],

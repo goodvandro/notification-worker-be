@@ -29,7 +29,7 @@ export class MessageService {
     return this.listMessagesUseCase.execute(user);
   }
 
-  async updateStatus(messageId: string, status: string, user: AuthUser): Promise<void> {
+  async updateStatus(messageId: string, status: string, user?: AuthUser): Promise<void> {
     return this.updateMessageStatusUseCase.execute(messageId, status, user);
   }
 }
