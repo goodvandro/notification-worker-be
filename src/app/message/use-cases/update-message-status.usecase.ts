@@ -6,7 +6,7 @@ export class UpdateMessageStatusUseCase {
   constructor(private readonly messageRepository: MessageRepository) {}
 
   async execute(messageId: string, status: string, user?: AuthUser): Promise<void> {
-    console.log(user);
+    if (user) console.log(user);
     await this.messageRepository.updateStatus(messageId, status as MessageStatus);
   }
 }

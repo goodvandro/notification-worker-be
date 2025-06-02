@@ -1,9 +1,4 @@
-POST /messages HTTP/1.1
+GET /messages HTTP/1.1
 Host: localhost:3001
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODNkM2JlMTUyYzRhYTYwNWYzMmFjNDQiLCJ1c2VybmFtZSI6ImV2YW5kcm8iLCJpYXQiOjE3NDg4NDM0OTcsImV4cCI6MTc0ODg0NDM5N30.rQ0zXObBOHdOVVm71r-9TZvkSzGt5yv64sCf6qaaTCs
-
-{
-  "title": "Queue test 3",
-  "content": "Simple queue test"
-}
