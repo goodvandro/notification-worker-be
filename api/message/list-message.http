@@ -1,4 +1,4 @@
-GET /messages?status=SENDING HTTP/1.1
+GET /messages?status=SENT&page=1&limit=2 HTTP/1.1
 Host: localhost:3001
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODNlZDM3ZDEwZTc1YWZiMzhmMzEwZDUiLCJ1c2VybmFtZSI6ImV2YW5kcm8iLCJpYXQiOjE3NDg5NDc4NDEsImV4cCI6MTc0ODk0ODc0MX0.BLBZyxGI5i-vvD49E2S9Sg0ryK77auYNYseg4mgzVNY
