@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { MessageRepository } from 'src/domain/message/repositories/message.repository';
 import { MessageDocument } from '../schemas/message.schema';
 import { Message } from 'src/domain/message/entities/message.entity';
+import { Console } from 'console';
 
 @Injectable()
 export class MessageMongoRepository implements MessageRepository {
@@ -30,8 +31,26 @@ export class MessageMongoRepository implements MessageRepository {
     );
   }
 
-  async findByUser(userId: string): Promise<Message[]> {
-    const docks = await this.model.find({ userId }).exec();
+  async findByUser(
+    userId: string,
+    status?: Message['status'],
+    page?: number,
+    limit?: number,
+  ): Promise<Message[]> {
+    const skip = ((page || 1) - 1) * (limit || 10);
+
+    const filter = { userId };
+
+    if (status) {
+      filter['status'] = status;
+    }
+
+    const docks = await this.model
+      .find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip || 0)
+      .limit(limit || 10)
+      .exec();
     return docks.map(
       (dock) =>
         new Message(
@@ -48,5 +67,13 @@ export class MessageMongoRepository implements MessageRepository {
 
   async updateStatus(id: string, status: string): Promise<void> {
     await this.model.findByIdAndUpdate(id, { status, updatedAt: new Date() }).exec();
+  }
+
+  async countByUser(userId: string, status?: Message['status']): Promise<number> {
+    const filter = { userId };
+    if (status) {
+      filter['status'] = status;
+    }
+    return this.model.countDocuments(filter).exec();
   }
 }

@@ -2,6 +2,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
 import { CreateMessageDTO } from 'src/app/message/dtos/create-message.dto';
+import { PaginatedMessagesOutputDTO } from 'src/app/message/dtos/paginated-messages.output.dto';
 import { CreateMessageUseCase } from 'src/app/message/use-cases/create-message.usecase';
 import { ListMessagesUseCase } from 'src/app/message/use-cases/list-messages.usecase';
 import { UpdateMessageStatusUseCase } from 'src/app/message/use-cases/update-message-status.usecase';
@@ -25,8 +26,13 @@ export class MessageService {
     return msg;
   }
 
-  async findAllByUser(user: AuthUser): Promise<Message[]> {
-    return this.listMessagesUseCase.execute(user);
+  async findAllByUser(
+    user: AuthUser,
+    status?: Message['status'],
+    page?: number,
+    limit?: number,
+  ): Promise<PaginatedMessagesOutputDTO> {
+    return this.listMessagesUseCase.execute(user, status, page, limit);
   }
 
   async updateStatus(messageId: string, status: string, user?: AuthUser): Promise<void> {

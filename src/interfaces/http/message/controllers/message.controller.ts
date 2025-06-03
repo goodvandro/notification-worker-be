@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { PaginatedMessagesOutputDTO } from 'src/app/message/dtos/paginated-messages.output.dto';
 import { AuthUser } from 'src/domain/auth/types/auth-user.interface';
-import { Message } from 'src/domain/message/entities/message.entity';
 import { JwtAuthGuard } from 'src/modules/auth/auth.guard';
 import { CurrentUser } from 'src/modules/auth/current-user.decorator';
 import { MessageService } from 'src/modules/message/message.service';
 import { CreateMessageDTOValidation } from '../validations/create-message.dto.validation';
+import { ListMessagesQueryDtoValidation } from '../validations/list-messages-query.dto.validation';
 import { UpdateMessageStatusDTOValidation } from '../validations/update-message-status.dto.validation';
 
 @UseGuards(JwtAuthGuard)
@@ -18,8 +19,12 @@ export class MessageController {
   }
 
   @Get()
-  async findAll(@CurrentUser() user: AuthUser): Promise<Message[]> {
-    return this.service.findAllByUser(user);
+  async findAll(
+    @CurrentUser() user: AuthUser,
+    @Query() query: ListMessagesQueryDtoValidation,
+  ): Promise<PaginatedMessagesOutputDTO> {
+    const { page, limit, status } = query;
+    return this.service.findAllByUser(user, status, page, limit);
   }
 
   @Get(':id/status')
