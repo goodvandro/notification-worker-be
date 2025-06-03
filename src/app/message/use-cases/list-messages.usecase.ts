@@ -10,7 +10,7 @@ export class ListMessagesUseCase {
    * Retorna mensagens de um usuário, filtradas por status (se informado),
    * e paginadas conforme page/limit.
    *
-   * @param user ID do usuário
+   * @param user Utilizador em sessão
    * @param status Se informado, filtra apenas por esse status
    * @param page Número da página (começa em 1)
    * @param limit Itens por página

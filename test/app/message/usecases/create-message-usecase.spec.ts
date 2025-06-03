@@ -1,9 +1,11 @@
 import { CreateMessageUseCase } from 'src/app/message/use-cases/create-message.usecase';
+import { AuthUser } from 'src/domain/auth/types/auth-user.interface';
 import { Message, MessageStatus } from 'src/domain/message/entities/message.entity';
 import { MessageRepository } from 'src/domain/message/repositories/message.repository';
 
 describe('CreateMessageUseCase', () => {
   let useCase: CreateMessageUseCase;
+  let user: AuthUser;
   let mockRepo: jest.Mocked<
     Pick<MessageRepository, 'create' | 'findByUser' | 'countByUser' | 'updateStatus'>
   >;
@@ -16,6 +18,7 @@ describe('CreateMessageUseCase', () => {
       updateStatus: jest.fn<Promise<void>, [string, MessageStatus]>(),
     };
     useCase = new CreateMessageUseCase(mockRepo);
+    user = { userId: 'user1', username: 'user1' };
   });
 
   it('should instance a new Message, create a message and return it', async () => {
@@ -32,12 +35,12 @@ describe('CreateMessageUseCase', () => {
 
     const result = await useCase.execute(
       { content: 'Conteúdo teste', title: 'Título teste' },
-      { userId: 'user1', username: 'user1' },
+      user,
     );
 
     expect(mockRepo.create).toHaveBeenCalledTimes(1);
     const msgArg = mockRepo.create.mock.calls[0][0];
-    expect(msgArg.userId).toBe('user1');
+    expect(msgArg.userId).toBe(user.userId);
     expect(msgArg.title).toBe('Título teste');
     expect(msgArg.content).toBe('Conteúdo teste');
     expect(msgArg.status).toBe('PENDING');
