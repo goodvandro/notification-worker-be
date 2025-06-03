@@ -47,11 +47,33 @@ export function setupBullBoard(app: INestApplication) {
   expressInstance.use(
     '/admin/queues',
     (req: Request, res: Response, next: NextFunction) => {
-      if (!isValidAdminToken(req)) {
-        res.status(401).send('Unauthorized');
-        return;
+      const expectedToken = process.env.ADMIN_BULL_BOARD_TOKEN;
+
+      // 5.1. Se for requisição dos arquivos estáticos ("/static/..."), deixa passar
+      if (req.path.startsWith('/static/')) {
+        return next();
       }
-      next();
+
+      // 5.2. Se estiver vindo ?token=<token> na URL, grava cookie e redireciona sem o ?token
+      const queryToken = (req.query?.token as string | undefined)?.trim();
+      if (queryToken && queryToken === expectedToken) {
+        // Grava o cookie válido para chamadas subsequentes
+        res.cookie('admin_bull_token', queryToken, {
+          httpOnly: true,
+          // opcional: secure: true, sameSite: 'strict' se for HTTPS em produção
+        });
+        // Redireciona para a mesma rota sem query string
+        const baseUrl = req.baseUrl + req.path; // ex: "/admin/queues" ou "/admin/queues/api/..."
+        return res.redirect(baseUrl);
+      }
+
+      // 5.3. Se houver cookie válido ou header válido, permite
+      if (isValidAdminToken(req)) {
+        return next();
+      }
+
+      // 5.4. Caso contrário, bloqueia
+      res.status(403).send('Forbidden');
     },
     serverAdapter.getRouter() as RequestHandler<
       ParamsDictionary,
