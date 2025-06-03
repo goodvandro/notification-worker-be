@@ -1,9 +1,12 @@
 import { createBullBoard } from '@bull-board/api';
 import { ExpressAdapter } from '@bull-board/express';
 import { getQueueToken } from '@nestjs/bull';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, InternalServerErrorException } from '@nestjs/common';
 import { Queue } from 'bull';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
+import { NextFunction, Request, Response } from 'express';
+import { isValidAdminToken } from './auth';
+import { Express } from 'express';
 
 /**
  * Configure the Bull Board (UI) for the queue "messages".
@@ -31,8 +34,22 @@ export function setupBullBoard(app: INestApplication) {
 
   // 4. Run a express server "under" the Nest instance
   const httpAdapter = app.getHttpAdapter();
-  const expressInstance = httpAdapter.getInstance(); // Like express.Application
+  const expressInstance = httpAdapter.getInstance() as Express | null; // Like express.Application
+
+  if (!expressInstance) {
+    throw new InternalServerErrorException('Failed to get Express instance');
+  }
 
   // 5. Add the Bull Board UI to the express instance
-  expressInstance.use('/admin/queues', serverAdapter.getRouter());
+  expressInstance.use(
+    '/admin/queues',
+    (req: Request, res: Response, next: NextFunction) => {
+      if (!isValidAdminToken(req)) {
+        res.status(401).send('Unauthorized');
+        return;
+      }
+      next();
+    },
+    serverAdapter.getRouter(),
+  );
 }
