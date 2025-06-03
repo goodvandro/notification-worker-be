@@ -4,16 +4,19 @@ import { getQueueToken } from '@nestjs/bull';
 import { INestApplication, InternalServerErrorException } from '@nestjs/common';
 import { Queue } from 'bull';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
-import { NextFunction, Request, Response } from 'express';
+// import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { isValidAdminToken } from './auth';
 import { Express } from 'express';
-
+import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { ParamsDictionary, Query } from 'express-serve-static-core';
 /**
  * Configure the Bull Board (UI) for the queue "messages".
  *
  * @param app - Nest instance (with module QueueModule already registered).
  */
 export function setupBullBoard(app: INestApplication) {
+  type ParsedQs = Query;
+
   // 1. Create the Express adapter
   const serverAdapter = new ExpressAdapter();
   // Optional: add basePath for UI of the Bull Board
@@ -50,6 +53,13 @@ export function setupBullBoard(app: INestApplication) {
       }
       next();
     },
-    serverAdapter.getRouter(),
+    serverAdapter.getRouter() as RequestHandler<
+      ParamsDictionary,
+      any,
+      any,
+      ParsedQs,
+      Record<string, any>
+    >,
+    // serverAdapter.getRouter(),
   );
 }
