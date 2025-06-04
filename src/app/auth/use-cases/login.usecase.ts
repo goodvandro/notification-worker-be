@@ -24,8 +24,11 @@ export class LoginUseCase {
       username: user.username,
     };
 
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+    const accessExpiresIn = process.env.JWT_EXPIRES_IN ?? '15m';
+    const refreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN ?? '7d';
+
+    const accessToken = this.jwtService.sign(payload, { expiresIn: accessExpiresIn });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: refreshExpiresIn });
 
     return new AuthPayload(user.id, user.username, String(accessToken), String(refreshToken));
   }
