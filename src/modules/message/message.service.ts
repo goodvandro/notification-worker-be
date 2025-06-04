@@ -4,6 +4,7 @@ import { Queue } from 'bull';
 import { CreateMessageDTO } from 'src/app/message/dtos/create-message.dto';
 import { PaginatedMessagesOutputDTO } from 'src/app/message/dtos/paginated-messages.output.dto';
 import { CreateMessageUseCase } from 'src/app/message/use-cases/create-message.usecase';
+import { GetMessageByIdUseCase } from 'src/app/message/use-cases/get-message-by-id';
 import { ListMessagesUseCase } from 'src/app/message/use-cases/list-messages.usecase';
 import { UpdateMessageStatusUseCase } from 'src/app/message/use-cases/update-message-status.usecase';
 import { AuthUser } from 'src/domain/auth/types/auth-user.interface';
@@ -15,6 +16,7 @@ export class MessageService {
     private readonly createMessageUseCase: CreateMessageUseCase,
     private readonly listMessagesUseCase: ListMessagesUseCase,
     private readonly updateMessageStatusUseCase: UpdateMessageStatusUseCase,
+    private readonly getMessageByIdUseCase: GetMessageByIdUseCase,
     @InjectQueue('messages') private readonly messageQueue: Queue,
   ) {}
 
@@ -37,5 +39,9 @@ export class MessageService {
 
   async updateStatus(messageId: string, status: string, user?: AuthUser): Promise<void> {
     return this.updateMessageStatusUseCase.execute(messageId, status, user);
+  }
+
+  async getById(id: string): Promise<Message | null> {
+    return this.getMessageByIdUseCase.execute(id);
   }
 }

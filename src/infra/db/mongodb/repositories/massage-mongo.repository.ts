@@ -76,4 +76,18 @@ export class MessageMongoRepository implements MessageRepository {
     }
     return this.model.countDocuments(filter).exec();
   }
+
+  async findById(id: string): Promise<Message | null> {
+    const dock = await this.model.findById(id).exec();
+    if (!dock) return null;
+    return new Message(
+      dock.id as string | null,
+      dock.userId,
+      dock.title,
+      dock.content,
+      dock.status,
+      dock.createdAt,
+      dock.updatedAt,
+    );
+  }
 }

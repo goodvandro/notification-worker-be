@@ -10,4 +10,5 @@ export interface MessageRepository {
   ): Promise<Message[]>;
   updateStatus(id: string, status: MessageStatus): Promise<void>;
   countByUser(userId: string, status?: Message['status']): Promise<number>;
+  findById(id: string): Promise<Message | null>;
 }

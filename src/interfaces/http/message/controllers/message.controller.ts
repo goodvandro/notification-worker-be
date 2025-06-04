@@ -35,4 +35,9 @@ export class MessageController {
   ) {
     return this.service.updateStatus(id, dto.status, user);
   }
+
+  @Get(':id')
+  async getById(@Param('id') id: string) {
+    return this.service.getById(id);
+  }
 }

@@ -9,6 +9,7 @@ import { MessageSchema } from 'src/infra/db/mongodb/schemas/message.schema';
 import { MessageController } from 'src/interfaces/http/message/controllers/message.controller';
 import { MessageService } from './message.service';
 import { BullModule } from '@nestjs/bull';
+import { GetMessageByIdUseCase } from 'src/app/message/use-cases/get-message-by-id';
 
 @Module({
   imports: [
@@ -35,6 +36,11 @@ import { BullModule } from '@nestjs/bull';
     {
       provide: UpdateMessageStatusUseCase,
       useFactory: (repo: MessageRepository) => new UpdateMessageStatusUseCase(repo),
+      inject: ['MessageRepository'],
+    },
+    {
+      provide: GetMessageByIdUseCase,
+      useFactory: (repo: MessageRepository) => new GetMessageByIdUseCase(repo),
       inject: ['MessageRepository'],
     },
   ],

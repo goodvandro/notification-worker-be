@@ -1,9 +1,9 @@
 POST /messages HTTP/1.1
 Host: localhost:3001
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODNlZDM3ZDEwZTc1YWZiMzhmMzEwZDUiLCJ1c2VybmFtZSI6ImV2YW5kcm8iLCJpYXQiOjE3NDg5NDc4NDEsImV4cCI6MTc0ODk0ODc0MX0.BLBZyxGI5i-vvD49E2S9Sg0ryK77auYNYseg4mgzVNY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODNmY2JmNmVjMmQxZDZjYjQzNjM1NjUiLCJ1c2VybmFtZSI6ImV2YW5kcm8iLCJpYXQiOjE3NDkwMjkxOTQsImV4cCI6MTc0OTAzMDA5NH0.pr-uGbNAagg4ch8qkjf-NVAxkMIzIw8D-l7GrtVd178
 
 {
-  "title": "Queue test 4",
+  "title": "Queue test",
   "content": "Simple queue test"
 }

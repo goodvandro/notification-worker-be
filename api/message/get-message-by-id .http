@@ -1,4 +1,4 @@
-GET /messages HTTP/1.1
+GET /messages/68401172ec2d1d6cb43635a3 HTTP/1.1
 Host: localhost:3001
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODNmY2JmNmVjMmQxZDZjYjQzNjM1NjUiLCJ1c2VybmFtZSI6ImV2YW5kcm8iLCJpYXQiOjE3NDkwMzMwMjksImV4cCI6MTc0OTAzMzkyOX0.d_IKl5zjJW43-1m6d95gHu0Hmfz3MtrD5vhL_IcRpfE
