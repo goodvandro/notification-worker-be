@@ -6,6 +6,7 @@ import { CustomJwtPayload } from 'src/app/auth/dto/jwt-payload';
 import { Public } from 'src/modules/auth/decorators/public.decorator';
 import { RegisterDtoValidation } from '../validations/register.dto.validation';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -13,13 +14,11 @@ export class AuthController {
     private readonly jwtService: JwtService,
   ) {}
 
-  @Public()
   @Post('login')
   async login(@Body() dto: LoginDtoValidation) {
     return this.service.login({ username: dto.username, password: dto.password });
   }
 
-  @Public()
   @Post('register')
   async create(@Body() dto: RegisterDtoValidation) {
     return this.service.register(dto);
@@ -28,12 +27,17 @@ export class AuthController {
   @Post('refresh')
   refresh(@Body('refreshToken') refreshToken: string) {
     try {
-      const payload: CustomJwtPayload = this.jwtService.verify(refreshToken);
-      const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
+      const customJwtPayload: CustomJwtPayload = this.jwtService.verify(refreshToken);
 
-      return {
-        accessToken,
+      const payload: CustomJwtPayload = {
+        sub: customJwtPayload.sub ?? '',
+        username: customJwtPayload.username,
       };
+
+      const accessExpiresIn = process.env.JWT_EXPIRES_IN ?? '15m';
+      const accessToken = this.jwtService.sign(payload, { expiresIn: accessExpiresIn });
+
+      return { accessToken };
     } catch (err) {
       throw new UnauthorizedException(err, 'Invalid refresh token');
     }
