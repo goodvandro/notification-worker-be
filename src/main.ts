@@ -11,10 +11,10 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  // app.enableCors({
-  //   origin: ['http://localhost:5173'],
-  //   credentials: true,
-  // });
+  app.enableCors({
+    origin: ['http://localhost:5173'],
+    credentials: true,
+  });
 
   setupBullBoard(app);
 
