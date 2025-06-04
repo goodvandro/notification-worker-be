@@ -9,6 +9,9 @@ import { UserSchema } from 'src/infra/db/mongodb/schemas/user.schema';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from 'src/interfaces/http/auth/controllers/auth.controller';
+import { RegisterUseCase } from 'src/app/auth/use-cases/register.usecase';
+import { JwtAuthGuard } from './auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -27,6 +30,10 @@ import { AuthController } from 'src/interfaces/http/auth/controllers/auth.contro
     AuthService,
     JwtStrategy,
     {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
       provide: 'UserRepository',
       useClass: UserMongoRepository,
     },
@@ -34,6 +41,13 @@ import { AuthController } from 'src/interfaces/http/auth/controllers/auth.contro
       provide: LoginUseCase,
       useFactory: (repo: UserRepository, jwt: JwtService) => {
         return new LoginUseCase(repo, jwt);
+      },
+      inject: ['UserRepository', JwtService],
+    },
+    {
+      provide: RegisterUseCase,
+      useFactory: (repo: UserRepository) => {
+        return new RegisterUseCase(repo);
       },
       inject: ['UserRepository', JwtService],
     },
