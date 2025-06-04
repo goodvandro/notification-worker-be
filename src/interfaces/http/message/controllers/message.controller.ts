@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/co
 import { PaginatedMessagesOutputDTO } from 'src/app/message/dtos/paginated-messages.output.dto';
 import { AuthUser } from 'src/domain/auth/types/auth-user.interface';
 import { JwtAuthGuard } from 'src/modules/auth/auth.guard';
-import { CurrentUser } from 'src/modules/auth/current-user.decorator';
+import { CurrentUser } from 'src/modules/auth/decorators/current-user.decorator';
 import { MessageService } from 'src/modules/message/message.service';
 import { CreateMessageDTOValidation } from '../validations/create-message.dto.validation';
 import { ListMessagesQueryDtoValidation } from '../validations/list-messages-query.dto.validation';

@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDtoValidation } from '../validations/login.dto.validation';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { CustomJwtPayload } from 'src/app/auth/dto/jwt-payload';
+import { Public } from 'src/modules/auth/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -11,6 +12,7 @@ export class AuthController {
     private readonly jwtService: JwtService,
   ) {}
 
+  @Public()
   @Post('login')
   async login(@Body() dto: LoginDtoValidation) {
     return this.service.login({ username: dto.username, password: dto.password });

@@ -11,6 +11,11 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
+  app.enableCors({
+    origin: ['http://localhost:5173'],
+    credentials: true,
+  });
+
   setupBullBoard(app);
 
   const port = process.env.WEB_SERVER_PORT || 3000;
