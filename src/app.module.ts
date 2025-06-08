@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
 import { MongoModule } from './infra/db/mongodb/mongodb.module';
-import { UserModule } from './modules/user/user.module';
+import { QueueModule } from './infra/queue/queue.module';
+import { RabbitMqModule } from './infra/queue/rabbitmq.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MessageModule } from './modules/message/message.module';
-import { QueueModule } from './infra/queue/queue.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { QueueModule } from './infra/queue/queue.module';
     UserModule,
     AuthModule,
     MessageModule,
-    QueueModule,
+    QueueModule, // Bull/Redis
+    RabbitMqModule, // RabbitMQ (consumer + producer)
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -9,6 +9,7 @@ import { ListMessagesUseCase } from 'src/app/message/use-cases/list-messages.use
 import { UpdateMessageStatusUseCase } from 'src/app/message/use-cases/update-message-status.usecase';
 import { AuthUser } from 'src/domain/auth/types/auth-user.interface';
 import { Message } from 'src/domain/message/entities/message.entity';
+import { RabbitMqService } from 'src/infra/queue/rabbitmq.service';
 
 @Injectable()
 export class MessageService {
@@ -18,13 +19,19 @@ export class MessageService {
     private readonly updateMessageStatusUseCase: UpdateMessageStatusUseCase,
     private readonly getMessageByIdUseCase: GetMessageByIdUseCase,
     @InjectQueue('messages') private readonly messageQueue: Queue,
+    private readonly rabbitMqService: RabbitMqService,
   ) {}
 
   async create(data: CreateMessageDTO, user: AuthUser): Promise<Message> {
     const msg = await this.createMessageUseCase.execute(data, user);
 
-    // Enqueue the message for processing
-    await this.messageQueue.add('process-message', { messageId: msg.id });
+    if (msg.id !== null) {
+      // Enqueue the message for processing
+      // await this.messageQueue.add('process-message', { messageId: msg.id });
+
+      // Publish the message to RabbitMQ
+      await this.rabbitMqService.publishMessage(msg.id);
+    }
     return msg;
   }
 

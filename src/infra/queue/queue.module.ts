@@ -7,7 +7,7 @@ import { MessageProcessor } from 'src/infra/queue/message.processor';
   imports: [
     BullModule.forRoot({
       redis: {
-        host: process.env.REDIS_HOST,
+        host: process.env.REDIS_HOST || 'redis',
         port: +(process.env.REDIS_PORT ?? 6379),
       },
       defaultJobOptions: {
