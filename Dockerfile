@@ -13,6 +13,9 @@ COPY scripts/wait-for-redis.sh /usr/local/bin/wait-for-redis.sh
 COPY scripts/wait-for-rabbit.sh /usr/local/bin/wait-for-rabbit.sh
 RUN chmod +x /usr/local/bin/wait-for-redis.sh /usr/local/bin/wait-for-rabbit.sh
 
+# Instala netcat também na final, caso queira debug
+RUN apk add --no-cache netcat-openbsd
+
 EXPOSE 3001
 
 CMD ["npm", "run", "start:dev"]

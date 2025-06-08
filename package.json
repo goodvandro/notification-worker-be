@@ -11,7 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:worker": "nest start --entry-file worker-main",
-    "start:dev:microservice": "ts-node -r tsconfig-paths/register src/microservice.ts",
+    "start:worker-mq": "ts-node -r tsconfig-paths/register src/worker-mq",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

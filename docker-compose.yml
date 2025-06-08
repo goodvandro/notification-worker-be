@@ -105,7 +105,7 @@ services:
     command: >
       sh -c "/usr/local/bin/wait-for-rabbit.sh ${RABBITMQ_HOST} ${RABBITMQ_PORT} && \
              /usr/local/bin/wait-for-redis.sh ${REDIS_HOST} ${REDIS_PORT} && \
-             npm run start:dev:microservice"
+             npm run start:worker-mq"
 
 volumes:
   mongo-data:
