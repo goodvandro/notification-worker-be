@@ -1,5 +1,3 @@
-// src/infra/queue/rabbitmq.service.ts
-
 import { Inject, Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
@@ -13,25 +11,26 @@ export class RabbitMqService implements OnModuleDestroy {
    * Publica uma mensagem (job) na fila "messages" do RabbitMQ.
    * O padrão do Nest é: client.emit(pattern, payload) para fire‐and‐forget.
    */
-  async publishMessage(messageId: string): Promise<void> {
+  publishMessage(messageId: string): void {
     // Força conexão caso ainda não esteja pronta:
     try {
-      // aguarda a conexão se necessário
-      console.log('Vamos conectar ao RabbitMQ...');
+      this.logger.log(`📤 Publicando mensagem: ${messageId}`);
 
-      if (this.client && typeof this.client.connect === 'function') {
-        console.log('Conectando ao RabbitMQ...');
-        await this.client.connect();
-      }
+      this.client.emit('process_message', { messageId });
 
-      // Emite o evento
-      await this.client.emit('process_message', { messageId }).toPromise();
-    } catch (e) {
-      this.logger.error('Falha no connect do RMQ:', e);
+      this.logger.log(`✅ Mensagem publicada: ${messageId}`);
+    } catch (error) {
+      this.logger.error(`❌ Erro ao publicar: ${messageId}`, error);
+      throw error;
     }
   }
 
   async onModuleDestroy() {
-    await this.client.close();
+    try {
+      await this.client.close();
+      this.logger.log('🔌 Cliente RabbitMQ desconectado');
+    } catch (error) {
+      this.logger.error('Erro ao fechar conexão RabbitMQ:', error);
+    }
   }
 }

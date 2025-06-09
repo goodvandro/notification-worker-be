@@ -1,29 +1,28 @@
-// src/worker.ts
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { Transport, RmqOptions } from '@nestjs/microservices';
+import { WorkerModule } from './infra/queue/worker.module';
 
 async function bootstrapWorker() {
-  const app = await NestFactory.create(AppModule);
-
-  // Conecta apenas o microservice RabbitMQ
-  app.connectMicroservice<RmqOptions>({
+  const app = await NestFactory.createMicroservice<RmqOptions>(WorkerModule, {
     transport: Transport.RMQ,
     options: {
-      urls: [process.env.RABBITMQ_URI as string], // e.g. amqp://guest:guest@rabbitmq:5672
-      queue: process.env.RABBITMQ_QUEUE, // e.g. notifications
-      queueOptions: { durable: true },
-      prefetchCount: 5,
+      urls: [process.env.RABBITMQ_URI as string],
+      queue: process.env.RABBITMQ_QUEUE as string,
+      queueOptions: {
+        durable: true,
+      },
+      prefetchCount: 1,
+      noAck: true,
       exchange: 'amq.topic',
       exchangeType: 'topic',
       wildcards: true,
+      // falta aqui ↓
+      routingKey: 'process_message',
     },
   });
 
-  // Aqui é que o Nest registra o @EventPattern e cria o binding
-  await app.startAllMicroservices();
-
-  console.log(`🐇 Worker RabbitMQ iniciado, aguardando eventos…`);
+  await app.listen();
+  console.log(`🐇 Worker RabbitMQ iniciado na fila: ${process.env.RABBITMQ_QUEUE}`);
 }
 
-bootstrapWorker();
+bootstrapWorker().catch(console.error);

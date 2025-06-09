@@ -30,7 +30,7 @@ export class MessageService {
       // await this.messageQueue.add('process-message', { messageId: msg.id });
 
       // Publish the message to RabbitMQ
-      await this.rabbitMqService.publishMessage(msg.id);
+      this.rabbitMqService.publishMessage(msg.id);
     }
     return msg;
   }

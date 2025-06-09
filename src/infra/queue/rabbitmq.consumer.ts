@@ -1,5 +1,5 @@
 import { Controller, Logger } from '@nestjs/common';
-import { EventPattern, Payload } from '@nestjs/microservices';
+import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 import { MessageService } from 'src/modules/message/message.service';
 
 @Controller()
@@ -7,8 +7,8 @@ export class RabbitMqConsumer {
   private readonly logger = new Logger(RabbitMqConsumer.name);
 
   constructor(private readonly messageService: MessageService) {
-    console.log('Instanciando RabbitMqConsumer');
-    this.logger.log('RabbitMqConsumer instanciado');
+    console.log('🔧 RabbitMqConsumer instanciado');
+    this.logger.log('🔧 RabbitMqConsumer registrado');
   }
 
   /**
@@ -16,26 +16,31 @@ export class RabbitMqConsumer {
    * for recebida na fila RabbitMQ.
    */
   @EventPattern('process_message')
-  async handleProcessMessage(@Payload() data: { messageId: string }) {
+  async handleProcessMessage(@Payload() data: { messageId: string }, @Ctx() context: RmqContext) {
     const { messageId } = data;
-    this.logger.log(
-      `[RabbitMqConsumer] Consumindo evento process_message → messageId=${messageId}`,
-    );
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
 
-    // 1. Atualiza status para SENDING
-    // const current = await this.messageService.findById(messageId);
+    this.logger.log(`🎯 Processando mensagem: ${messageId}`);
 
-    // if (current.status !== 'PENDING') {
-    await this.messageService.updateStatus(messageId, 'SENDING');
-    this.logger.log(`[RabbitMqConsumer] Mensagem ${messageId} como SENDING`);
-    // return;
-    // }
+    try {
+      await this.messageService.updateStatus(messageId, 'SENDING');
+      this.logger.log(`📤 Status SENDING: ${messageId}`);
 
-    // 2. Simula delay de envio (2 segundos)
-    await new Promise((res) => setTimeout(res, 2000));
+      await new Promise((res) => setTimeout(res, 2000));
 
-    // 3. Atualiza status para SENT
-    await this.messageService.updateStatus(messageId, 'SENT');
-    this.logger.log(`[RabbitMqConsumer] Mensagem ${messageId} como SENT`);
+      await this.messageService.updateStatus(messageId, 'SENT');
+      this.logger.log(`✅ Status SENT: ${messageId}`);
+
+      // 4. Confirma processamento (ACK)
+      channel.ack(originalMsg);
+      this.logger.log(`✅ Mensagem confirmada: ${messageId}`);
+    } catch (error) {
+      this.logger.error(`❌ Erro ao processar ${messageId}:`, error);
+
+      // Rejeita a mensagem (NACK) - pode reprocessar ou descartar
+      channel.nack(originalMsg, false, false); // false, false = descarta
+      throw error;
+    }
   }
 }

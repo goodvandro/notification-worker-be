@@ -1,9 +1,9 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { MessageModule } from 'src/modules/message/message.module';
 import { RabbitMqConsumer } from './rabbitmq.consumer';
 import { RabbitMqService } from './rabbitmq.service';
+import { MessageModule } from 'src/modules/message/message.module';
 
 @Module({
   imports: [
@@ -24,13 +24,18 @@ import { RabbitMqService } from './rabbitmq.service';
               queue,
               queueOptions: { durable: true },
               prefetchCount: 5,
+              noAck: true, // Garante confirmação de processamento
+              exchange: 'amq.topic', // ← mesmíssimo exchange
+              exchangeType: 'topic',
+              wildcards: true,
+              routingKey: 'process_message', // ← mesmíssima routingKey
             },
           };
         },
         inject: [ConfigService],
       },
     ]),
-    forwardRef(() => MessageModule),
+    forwardRef(() => MessageModule), // Use forwardRef to resolve circular dependency
   ],
   providers: [RabbitMqConsumer, RabbitMqService],
   exports: [RabbitMqService],

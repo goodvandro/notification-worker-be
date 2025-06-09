@@ -16,7 +16,7 @@ import { MessageService } from './message.service';
   imports: [
     MongooseModule.forFeature([{ name: 'Message', schema: MessageSchema }]),
     BullModule.registerQueue({ name: 'messages' }),
-    forwardRef(() => RabbitMqModule),
+    forwardRef(() => RabbitMqModule), // Use forwardRef to resolve circular dependency,
   ],
   controllers: [MessageController],
   providers: [
