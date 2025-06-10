@@ -18,14 +18,14 @@ import { MessageModule } from 'src/modules/message/message.module';
             queue: config.get('RABBITMQ_QUEUE')!, // 'notifications'
             queueOptions: { durable: true },
             prefetchCount: 1,
-            // replyQueue: 'amq.rabbitmq.reply-to',
-            noAck: true,
-
-            // ← exatamente o mesmo topic-exchange + routingKey
+            noAck: false,
             exchange: 'amq.topic',
             exchangeType: 'topic',
             wildcards: true,
             routingKey: config.get('RABBITMQ_ROUTING_KEY')!,
+            // replyQueue: 'amq.rabbitmq.reply-to',
+
+            // ← exatamente o mesmo topic-exchange + routingKey
           },
         }),
         inject: [ConfigService],
