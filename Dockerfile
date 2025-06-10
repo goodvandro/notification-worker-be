@@ -8,6 +8,10 @@ RUN npm install
 
 COPY . .
 
+# Copia o script para /usr/local/bin e dá permissão
+COPY scripts/wait-for-redis.sh /usr/local/bin/wait-for-redis.sh
+RUN chmod +x /usr/local/bin/wait-for-redis.sh
+
 EXPOSE 3001
 
 CMD ["npm", "run", "start:dev"]

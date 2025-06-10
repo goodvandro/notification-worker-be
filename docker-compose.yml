@@ -56,7 +56,10 @@ services:
       - db
       - redis
     command: >
-      sh -c "npm run start:dev"
+      sh -c "
+        /usr/local/bin/wait-for-redis.sh ${REDIS_HOST} ${REDIS_PORT} &&
+        npm run start:dev
+      "
 
   worker:
     build: .
@@ -79,7 +82,10 @@ services:
       - db
       - redis
     command: >
-      sh -c "npm run start:worker"
+      sh -c "
+        /usr/local/bin/wait-for-redis.sh ${REDIS_HOST} ${REDIS_PORT} &&
+        npm run start:worker
+      "
 
 volumes:
   mongo-data:
