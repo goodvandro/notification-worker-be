@@ -19,7 +19,7 @@ export class MessageProcessor {
     this.logger.log(`Job ${job.id} - Message ${messageId} updated to SENDING`);
 
     // 2. Simulate delay for sending the message (2 seconds)
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
     // 3. Update the message status to 'SENT'
     await this.messageService.updateStatus(messageId, 'SENT');

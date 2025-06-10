@@ -10,11 +10,13 @@ import { MessageMongoRepository } from 'src/infra/db/mongodb/repositories/massag
 import { MessageSchema } from 'src/infra/db/mongodb/schemas/message.schema';
 import { MessageController } from 'src/interfaces/http/message/controllers/message.controller';
 import { MessageService } from './message.service';
+import { WebsocketModule } from 'src/infra/websocket/websocket.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Message', schema: MessageSchema }]),
     BullModule.registerQueue({ name: 'messages' }),
+    WebsocketModule,
   ],
   controllers: [MessageController],
   providers: [

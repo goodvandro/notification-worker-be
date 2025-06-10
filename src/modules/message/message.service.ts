@@ -9,6 +9,7 @@ import { ListMessagesUseCase } from 'src/app/message/use-cases/list-messages.use
 import { UpdateMessageStatusUseCase } from 'src/app/message/use-cases/update-message-status.usecase';
 import { AuthUser } from 'src/domain/auth/types/auth-user.interface';
 import { Message } from 'src/domain/message/entities/message.entity';
+import { NotificationsGateway } from 'src/infra/websocket/notifications.gateway';
 
 @Injectable()
 export class MessageService {
@@ -18,6 +19,7 @@ export class MessageService {
     private readonly updateMessageStatusUseCase: UpdateMessageStatusUseCase,
     private readonly getMessageByIdUseCase: GetMessageByIdUseCase,
     @InjectQueue('messages') private readonly messageQueue: Queue,
+    private readonly notificationsGateway: NotificationsGateway,
   ) {}
 
   async create(data: CreateMessageDTO, user: AuthUser): Promise<Message> {
@@ -40,7 +42,9 @@ export class MessageService {
   }
 
   async updateStatus(messageId: string, status: string, user?: AuthUser): Promise<void> {
-    return this.updateMessageStatusUseCase.execute(messageId, status, user);
+    await this.updateMessageStatusUseCase.execute(messageId, status, user);
+    const updatedMessage = await this.getMessageByIdUseCase.execute(messageId);
+    if (updatedMessage) this.notificationsGateway.notifyStatusUpdate(updatedMessage);
   }
 
   async getById(id: string): Promise<Message | null> {

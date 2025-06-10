@@ -51,6 +51,7 @@ services:
       - DB_NAME=${DB_NAME}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
+      - WEB_FRONTEND_URL=${WEB_FRONTEND_URL}
     depends_on:
       - db
       - redis
@@ -73,6 +74,7 @@ services:
       - DB_NAME=${DB_NAME}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
+      - WEB_FRONTEND_URL=${WEB_FRONTEND_URL}
     depends_on:
       - db
       - redis

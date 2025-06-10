@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongoModule } from './infra/db/mongodb/mongodb.module';
 import { QueueModule } from './infra/queue/queue.module';
+import { WebsocketModule } from './infra/websocket/websocket.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MessageModule } from './modules/message/message.module';
 import { UserModule } from './modules/user/user.module';
@@ -16,6 +17,7 @@ import { UserModule } from './modules/user/user.module';
     AuthModule,
     MessageModule,
     QueueModule,
+    WebsocketModule,
   ],
   controllers: [AppController],
   providers: [AppService],
