@@ -1,5 +1,5 @@
 import { BullModule } from '@nestjs/bull';
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CreateMessageUseCase } from 'src/app/message/use-cases/create-message.usecase';
 import { GetMessageByIdUseCase } from 'src/app/message/use-cases/get-message-by-id';
@@ -8,7 +8,6 @@ import { UpdateMessageStatusUseCase } from 'src/app/message/use-cases/update-mes
 import { MessageRepository } from 'src/domain/message/repositories/message.repository';
 import { MessageMongoRepository } from 'src/infra/db/mongodb/repositories/massage-mongo.repository';
 import { MessageSchema } from 'src/infra/db/mongodb/schemas/message.schema';
-import { RabbitMqModule } from 'src/infra/queue/rabbitmq.module';
 import { MessageController } from 'src/interfaces/http/message/controllers/message.controller';
 import { MessageService } from './message.service';
 
@@ -16,7 +15,6 @@ import { MessageService } from './message.service';
   imports: [
     MongooseModule.forFeature([{ name: 'Message', schema: MessageSchema }]),
     BullModule.registerQueue({ name: 'messages' }),
-    forwardRef(() => RabbitMqModule), // Use forwardRef to resolve circular dependency,
   ],
   controllers: [MessageController],
   providers: [

@@ -30,20 +30,6 @@ services:
       - "${REDIS_PORT}:6379"
     networks:
       - notification-worker-nt
-
-  rabbitmq:
-    hostname: rabbitmq-host
-    image: rabbitmq:3-management-alpine
-    restart: unless-stopped
-    container_name: notification-worker-mq
-    env_file: ./.env
-    ports:
-      - "${RABBITMQ_PORT}:5672"
-      - "${RABBITMQ_PORT2}:15672"
-    networks:
-      - notification-worker-nt
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
   
   be:
     build:
@@ -56,7 +42,7 @@ services:
       - notification-worker-nt
     volumes:
       - .:/app
-      - node_modules:/app/node_modules
+      - /app/node_modules
     environment:
       - WEB_SERVER_PORT=${WEB_SERVER_PORT}
       - DB_USER=${DB_USER}
@@ -66,18 +52,11 @@ services:
       - DB_NAME=${DB_NAME}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_URI=amqp://rabbitmq-host:5672 # ← Use hostname
-      - RABBITMQ_QUEUE=${RABBITMQ_QUEUE}
     depends_on:
       - db
       - redis
-      - rabbitmq
     command: >
-      sh -c "/usr/local/bin/wait-for-rabbit.sh ${RABBITMQ_HOST} ${RABBITMQ_PORT} && \
-             /usr/local/bin/wait-for-redis.sh ${REDIS_HOST} ${REDIS_PORT} && \
-             npm run start:dev"
+      sh -c "npm run start:dev"
 
   worker:
     build: .
@@ -95,22 +74,12 @@ services:
       - DB_NAME=${DB_NAME}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_URI=amqp://rabbitmq-host:5672 # ← Use hostname
-      - RABBITMQ_QUEUE=${RABBITMQ_QUEUE}
     depends_on:
       - db
       - redis
-      - rabbitmq
     command: >
-      sh -c "/usr/local/bin/wait-for-rabbit.sh ${RABBITMQ_HOST} ${RABBITMQ_PORT} && \
-             /usr/local/bin/wait-for-redis.sh ${REDIS_HOST} ${REDIS_PORT} && \
-             npm run start:worker-mq"
+      sh -c "npm run start:main-worker"
 
 volumes:
   mongo-data:
     name: notification-worker-db-data
-  rabbitmq-data:
-    name: notification-worker-mq-data
-  node_modules:
