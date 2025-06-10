@@ -42,7 +42,6 @@ services:
       - notification-worker-nt
     volumes:
       - .:/app
-      - /app/node_modules
     environment:
       - WEB_SERVER_PORT=${WEB_SERVER_PORT}
       - DB_USER=${DB_USER}
@@ -78,7 +77,7 @@ services:
       - db
       - redis
     command: >
-      sh -c "npm run start:main-worker"
+      sh -c "npm run start:worker"
 
 volumes:
   mongo-data:
