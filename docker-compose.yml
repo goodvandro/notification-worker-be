@@ -32,6 +32,7 @@ services:
       - notification-worker-nt
 
   rabbitmq:
+    hostname: rabbitmq-host
     image: rabbitmq:3-management-alpine
     restart: unless-stopped
     container_name: notification-worker-mq
@@ -67,7 +68,7 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_URI=${RABBITMQ_URI}
+      - RABBITMQ_URI=amqp://rabbitmq-host:5672 # ← Use hostname
       - RABBITMQ_QUEUE=${RABBITMQ_QUEUE}
     depends_on:
       - db
@@ -96,7 +97,7 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - RABBITMQ_PORT=${RABBITMQ_PORT}
-      - RABBITMQ_URI=${RABBITMQ_URI}
+      - RABBITMQ_URI=amqp://rabbitmq-host:5672 # ← Use hostname
       - RABBITMQ_QUEUE=${RABBITMQ_QUEUE}
     depends_on:
       - db

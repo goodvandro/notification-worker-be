@@ -11,12 +11,12 @@ export class RabbitMqService implements OnModuleDestroy {
    * Publica uma mensagem (job) na fila "messages" do RabbitMQ.
    * O padrão do Nest é: client.emit(pattern, payload) para fire‐and‐forget.
    */
-  publishMessage(messageId: string): void {
+  async publishMessage(messageId: string): Promise<void> {
     // Força conexão caso ainda não esteja pronta:
     try {
       this.logger.log(`📤 Publicando mensagem: ${messageId}`);
 
-      this.client.emit('process_message', { messageId });
+      await this.client.emit('process_message_queue', { messageId }).toPromise();
 
       this.logger.log(`✅ Mensagem publicada: ${messageId}`);
     } catch (error) {
