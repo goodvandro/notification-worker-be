@@ -18,20 +18,20 @@ import { MessageModule } from 'src/modules/message/message.module';
             queue: config.get('RABBITMQ_QUEUE')!, // 'notifications'
             queueOptions: { durable: true },
             prefetchCount: 1,
-            replyQueue: 'amq.rabbitmq.reply-to',
+            // replyQueue: 'amq.rabbitmq.reply-to',
             noAck: true,
 
             // ← exatamente o mesmo topic-exchange + routingKey
             exchange: 'amq.topic',
             exchangeType: 'topic',
             wildcards: true,
-            routingKey: 'process_message_queue',
+            routingKey: config.get('RABBITMQ_ROUTING_KEY')!,
           },
         }),
         inject: [ConfigService],
       },
     ]),
-    forwardRef(() => MessageModule), // Use forwardRef to resolve circular dependency
+    forwardRef(() => MessageModule),
   ],
   providers: [RabbitMqConsumer, RabbitMqService],
   exports: [RabbitMqService],

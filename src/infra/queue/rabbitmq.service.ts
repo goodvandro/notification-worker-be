@@ -16,7 +16,9 @@ export class RabbitMqService implements OnModuleDestroy {
     try {
       this.logger.log(`📤 Publicando mensagem: ${messageId}`);
 
-      await this.client.emit('process_message_queue', { messageId }).toPromise();
+      const routingKey = process.env.RABBITMQ_ROUTING_KEY;
+
+      await this.client.emit(routingKey, { messageId }).toPromise();
 
       this.logger.log(`✅ Mensagem publicada: ${messageId}`);
     } catch (error) {

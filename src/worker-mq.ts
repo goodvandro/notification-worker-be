@@ -5,6 +5,7 @@ import { WorkerModule } from './infra/queue/worker.module';
 async function bootstrapWorker() {
   const url = process.env.RABBITMQ_URI as string;
   const queue = process.env.RABBITMQ_QUEUE_WORKER as string;
+  const routingKey = process.env.RABBITMQ_ROUTING_KEY as string;
 
   // const app = await NestFactory.createMicroservice<RmqOptions>(WorkerModule, {
   //   transport: Transport.RMQ,
@@ -34,7 +35,7 @@ async function bootstrapWorker() {
       exchange: 'amq.topic',
       exchangeType: 'topic',
       wildcards: false,
-      routingKey: 'process_message_queue',
+      routingKey,
     },
   });
   // await app.startAllMicroservices();
