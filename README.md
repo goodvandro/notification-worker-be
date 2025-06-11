@@ -65,7 +65,7 @@ Certifique-se de ter o seguinte instalado:
 
    # JWT
    JWT_SECRET=supersecretjwt
-   JWT_EXPIRES_IN=1m
+   JWT_EXPIRES_IN=5m
    JWT_REFRESH_EXPIRES_IN=7d
 
    # URL do Front-end para CORS
