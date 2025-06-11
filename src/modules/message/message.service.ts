@@ -25,9 +25,12 @@ export class MessageService {
   async create(data: CreateMessageDTO, user: AuthUser): Promise<Message> {
     const msg = await this.createMessageUseCase.execute(data, user);
 
+    console.log(msg);
     if (msg.id !== null) {
       // Enqueue the message for processing
+      console.log('Enqueueing message...');
       await this.messageQueue.add('process-message', { messageId: msg.id });
+      console.log('Message enqueued.');
     }
     return msg;
   }

@@ -61,7 +61,7 @@ services:
         npm run start:dev
       "
 
-  worker:
+  wk:
     build: .
     container_name: notification-worker-wk
     env_file: ./.env

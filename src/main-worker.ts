@@ -2,7 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { WorkerModule } from './infra/queue/worker.module';
 
 async function bootstrapWorker() {
-  await NestFactory.createApplicationContext(WorkerModule);
+  const app = await NestFactory.createApplicationContext(WorkerModule);
+  await app.init();
   console.log('🐇 Worker Bull iniciado (process-message)');
 }
 
