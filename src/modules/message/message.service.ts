@@ -27,9 +27,7 @@ export class MessageService {
 
     if (msg.id !== null) {
       // Enqueue the message for processing
-      console.log('Enqueueing message...');
       await this.messageQueue.add('process-message', { messageId: msg.id });
-      console.log('Message enqueued.');
     }
     return msg;
   }
