@@ -41,6 +41,17 @@ Certifique-se de ter o seguinte instalado:
 - Node.js v18+
 - Docker & Docker Compose
 
+### Clonagem do repositorio
+
+1. Abra o terminal e navegue para a pasta onde deseja clonar o repositório:
+   ```bash
+   git clone git@github.com:goodvandro/notification-worker-be.git
+   ```
+2. Navegue para a pasta clonada:
+   ```bash
+   cd notification-worker-be
+   ```
+
 ### Configuração do arquivo `.env`
 
 1. Copie o modelo:
