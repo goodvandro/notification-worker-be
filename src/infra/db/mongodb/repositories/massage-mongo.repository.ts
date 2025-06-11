@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { MessageRepository } from 'src/domain/message/repositories/message.repository';
 import { MessageDocument } from '../schemas/message.schema';
 import { Message } from 'src/domain/message/entities/message.entity';
-import { Console } from 'console';
 
 @Injectable()
 export class MessageMongoRepository implements MessageRepository {

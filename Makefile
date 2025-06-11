@@ -10,8 +10,8 @@ up-prod:
 logs:
 	docker compose logs -f be
 
-logs-bk:
-	docker compose logs -f bk
+logs-wk:
+	docker compose logs -f wk
 
 restart:
 	docker compose down && docker compose build && docker compose up -d

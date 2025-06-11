@@ -12,10 +12,10 @@ services:
     restart: unless-stopped
     env_file: ./.env
     ports:
-      - $DB_PORT:27017
+      - "${DB_PORT}:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: $DB_USER
-      MONGO_INITDB_ROOT_PASSWORD: $DB_PASS
+      MONGO_INITDB_ROOT_USERNAME: "${DB_USER}"
+      MONGO_INITDB_ROOT_PASSWORD: "${DB_PASS}"
     networks:
       - notification-worker-nt
     volumes:
@@ -27,7 +27,7 @@ services:
     container_name: notification-worker-redis
     env_file: ./.env
     ports:
-      - $REDIS_PORT:6379
+      - "${REDIS_PORT}:6379"
     networks:
       - notification-worker-nt
   
@@ -37,46 +37,56 @@ services:
     container_name: notification-worker-be
     env_file: ./.env
     ports:
-      - $WEB_SERVER_PORT:3001
+      - "${WEB_SERVER_PORT}:3001"
     networks:
       - notification-worker-nt
     volumes:
       - .:/app
-      - /app/node_modules
     environment:
-      - WEB_SERVER_PORT=$WEB_SERVER_PORT
-      - DB_USER=$DB_USER
-      - DB_PASS=$DB_PASS
-      - DB_HOST=$DB_HOST
+      - WEB_SERVER_PORT=${WEB_SERVER_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_HOST=${DB_HOST}
       - DB_PORT=27017
-      - DB_NAME=$DB_NAME
-      - REDIS_HOST=$REDIS_HOST
-      - REDIS_PORT=$REDIS_PORT
+      - DB_NAME=${DB_NAME}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - WEB_FRONTEND_URL=${WEB_FRONTEND_URL}
     depends_on:
       - db
       - redis
-    command: npm run start:dev
+    command: >
+      sh -c "
+        /usr/local/bin/wait-for-redis.sh ${REDIS_HOST} ${REDIS_PORT} &&
+        npm run start:dev
+      "
 
-  worker:
-    build: .
-    container_name: notification-worker-wk
-    command: npm run start:worker
-    env_file: ./.env
-    networks:
-      - notification-worker-nt
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-      - redis
-    environment:
-      - DB_USER=$DB_USER
-      - DB_PASS=$DB_PASS
-      - DB_HOST=$DB_HOST
-      - DB_PORT=27017
-      - DB_NAME=$DB_NAME
-      - REDIS_HOST=$REDIS_HOST
-      - REDIS_PORT=$REDIS_PORT
+  # wk:
+  #   build: .
+  #   container_name: notification-worker-wk
+  #   env_file: ./.env
+  #   networks:
+  #     - notification-worker-nt
+  #   volumes:
+  #     - .:/app
+  #   environment:
+  #     - DB_USER=${DB_USER}
+  #     - DB_PASS=${DB_PASS}
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=27017
+  #     - DB_NAME=${DB_NAME}
+  #     - REDIS_HOST=${REDIS_HOST}
+  #     - REDIS_PORT=${REDIS_PORT}
+  #     - WEB_FRONTEND_URL=${WEB_FRONTEND_URL}
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   command: >
+  #     sh -c "
+  #       /usr/local/bin/wait-for-redis.sh ${REDIS_HOST} ${REDIS_PORT} &&
+  #       npm run start:worker
+  #     "
+
 volumes:
   mongo-data:
     name: notification-worker-db-data

@@ -8,7 +8,7 @@ describe('ListMessagesUseCase', () => {
   let useCase: ListMessagesUseCase;
   let user: AuthUser;
   let mockRepo: jest.Mocked<
-    Pick<MessageRepository, 'create' | 'findByUser' | 'countByUser' | 'updateStatus'>
+    Pick<MessageRepository, 'create' | 'findByUser' | 'countByUser' | 'updateStatus' | 'findById'>
   >;
 
   beforeEach(() => {
@@ -17,6 +17,7 @@ describe('ListMessagesUseCase', () => {
       findByUser: jest.fn<Promise<Message[]>, [string, Message['status'], number, number]>(),
       countByUser: jest.fn<Promise<number>, [string, Message['status']]>(),
       updateStatus: jest.fn<Promise<void>, [string, MessageStatus]>(),
+      findById: jest.fn<Promise<Message | null>, [string]>(),
     };
     useCase = new ListMessagesUseCase(mockRepo);
     user = { userId: 'user1', username: 'user1' };
@@ -45,7 +46,7 @@ describe('ListMessagesUseCase', () => {
         total: 2,
         page: 1,
         limit: 10,
-        totalPages: Math.ceil(2 / 10), // = 1
+        totalPages: Math.ceil(2 / 10),
       },
     };
     expect(result).toEqual(expected);
