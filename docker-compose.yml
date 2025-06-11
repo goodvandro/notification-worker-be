@@ -61,31 +61,31 @@ services:
         npm run start:dev
       "
 
-  wk:
-    build: .
-    container_name: notification-worker-wk
-    env_file: ./.env
-    networks:
-      - notification-worker-nt
-    volumes:
-      - .:/app
-    environment:
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=27017
-      - DB_NAME=${DB_NAME}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - WEB_FRONTEND_URL=${WEB_FRONTEND_URL}
-    depends_on:
-      - db
-      - redis
-    command: >
-      sh -c "
-        /usr/local/bin/wait-for-redis.sh ${REDIS_HOST} ${REDIS_PORT} &&
-        npm run start:worker
-      "
+  # wk:
+  #   build: .
+  #   container_name: notification-worker-wk
+  #   env_file: ./.env
+  #   networks:
+  #     - notification-worker-nt
+  #   volumes:
+  #     - .:/app
+  #   environment:
+  #     - DB_USER=${DB_USER}
+  #     - DB_PASS=${DB_PASS}
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=27017
+  #     - DB_NAME=${DB_NAME}
+  #     - REDIS_HOST=${REDIS_HOST}
+  #     - REDIS_PORT=${REDIS_PORT}
+  #     - WEB_FRONTEND_URL=${WEB_FRONTEND_URL}
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   command: >
+  #     sh -c "
+  #       /usr/local/bin/wait-for-redis.sh ${REDIS_HOST} ${REDIS_PORT} &&
+  #       npm run start:worker
+  #     "
 
 volumes:
   mongo-data:
