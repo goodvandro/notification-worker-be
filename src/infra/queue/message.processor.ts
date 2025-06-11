@@ -8,10 +8,13 @@ import { MessageService } from 'src/modules/message/message.service';
 export class MessageProcessor {
   private readonly logger = new Logger(MessageProcessor.name);
 
-  constructor(private readonly messageService: MessageService) {}
+  constructor(private readonly messageService: MessageService) {
+    this.logger.log('MessageProcessor initialized');
+  }
 
   @Process('process-message')
   async handleProcessMessage(job: Job<{ messageId: string }>) {
+    console.log('🐇 Processando mensagem...');
     const { messageId } = job.data;
 
     // 1. Update the message status to 'SENDING'
