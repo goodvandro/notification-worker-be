@@ -41,7 +41,7 @@ Certifique-se de ter o seguinte instalado:
 - Node.js v18+
 - Docker & Docker Compose
 
-### Clonagem do repositorio
+## 📜 Clonagem do repositorio
 
 1. Abra o terminal e navegue para a pasta onde deseja clonar o repositório:
    ```bash
@@ -52,13 +52,13 @@ Certifique-se de ter o seguinte instalado:
    cd notification-worker-be
    ```
 
+## 🛠️ Configuração
 ### Configuração do arquivo `.env`
-
 1. Copie o modelo:
    ```bash
    cp .env.example .env
    ```
-2. Abra o `.env` e ajuste as variáveis:
+2. Abra o `.env` e ajuste as variáveis conforme o exemplo:
    ```dotenv
    # Porta do servidor HTTP
    WEB_SERVER_PORT=3001
@@ -85,12 +85,8 @@ Certifique-se de ter o seguinte instalado:
    # Token de acesso ao Bull Board
    ADMIN_BULL_BOARD_TOKEN=admin-bull-board-secret-token
    ```
-3. Salve e siga para o setup com Docker Compose.
-
-## 🛠️ Configuração
-
-1. Copie `.env.example` para `.env` e ajuste variáveis de conexão e tokens.
-2. Certifique-se de ter os scripts de espera em `scripts/`:
+3. Copie `.env.example` para `.env` e ajuste variáveis de conexão e tokens.
+4. Certifique-se de ter os script de espera para o Redis em `scripts/`:
    - `wait-for-redis.sh`
 
 ```
@@ -134,7 +130,6 @@ make up
 
 
 ## 📦 Scripts Para Rodar os Testes
-
 - `test` - executa os testes unitários
 - `test:e2e` – executa teste E2E
 
@@ -149,19 +144,15 @@ Os exemplos de testes de endpoints podem ser encontrados na pasta `/api`
 - **REDIS/BULL** + **WebSocket** `/messageStatusUpdated` – evento de atualização de status (Authenticated)
 
 ## 📊 Dashboard de Filas (Bull Board)
-
 - Acesse `/admin/queues?token=<ADMIN_BULL_BOARD_TOKEN>` para monitorar jobs.
 
-## 🎯 Próximos Passos
-
-- Adicionar deploy com docker, utilizando CI/CD
-- Implementar testes unitários e E2E
-- Incluir monitoramento e métricas
-
 ## 🎓 Camadas da Arquitetura
-
 - **Domain Layer:** entidades e contratos sem dependência de frameworks.
 - **Application Layer:** casos de uso que coordenam repositórios e gateways.
 - **Infra Layer:** implementação concreta de repositório (MongoDB), fila (Redis/Bull), WebSocket.
 - **Interface Layer:** adaptadores para HTTP, WebSocket e dashboards.
 
+## 🎯 Próximos Passos
+- Adicionar deploy com docker, utilizando CI/CD
+- Implementar testes unitários e E2E em todo o projeto
+- Incluir monitoramento e métricas
