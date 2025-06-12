@@ -86,31 +86,8 @@ Certifique-se de ter o seguinte instalado:
    ADMIN_BULL_BOARD_TOKEN=admin-bull-board-secret-token
    ```
 3. Copie `.env.example` para `.env` e ajuste variáveis de conexão e tokens.
-4. Certifique-se de ter os script de espera para o Redis em `scripts/`:
+4. Certifique-se de ter o script de espera para o Redis em `scripts/`:
    - `wait-for-redis.sh`
-
-```
-# scripts/wait-for-redis.sh
-#!/usr/bin/env sh
-
-# wait-for-redis.sh
-# Aguarda até que o host e porta do Redis estejam disponíveis antes de continuar.
-
-set -e
-
-host="$1"
-port="$2"
-shift 2
-
-echo "⏳ Aguardando Redis em ${host}:${port}..."
-
-while ! nc -z "$host" "$port"; do
-  sleep 0.3
-done
-
-echo "✅ Redis está pronto em ${host}:${port}! Executando comando: $*"
-exec "$@"
-```
 
 ### Executando com Docker Compose
 ```bash
@@ -130,8 +107,7 @@ make up
 
 
 ## 📦 Scripts Para Rodar os Testes
-- `test` - executa os testes unitários
-- `test:e2e` – executa teste E2E
+- `test` - executa os testes unitários dos casos de uso
 
 ## 🔗 Endpoints Principais
 Os exemplos de testes de endpoints podem ser encontrados na pasta `/api`
@@ -154,5 +130,13 @@ Os exemplos de testes de endpoints podem ser encontrados na pasta `/api`
 
 ## 🎯 Próximos Passos
 - Adicionar deploy com docker, utilizando CI/CD
-- Implementar testes unitários e E2E em todo o projeto
+- Implementar testes unitários e E2E
 - Incluir monitoramento e métricas
+
+---
+
+## 🧑‍💻 Autor
+
+Desenvolvido por [Evandro Monteiro](https://github.com/goodvandro)
+
+---
