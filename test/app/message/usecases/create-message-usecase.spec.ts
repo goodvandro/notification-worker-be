@@ -7,7 +7,7 @@ describe('CreateMessageUseCase', () => {
   let useCase: CreateMessageUseCase;
   let user: AuthUser;
   let mockRepo: jest.Mocked<
-    Pick<MessageRepository, 'create' | 'findByUser' | 'countByUser' | 'updateStatus'>
+    Pick<MessageRepository, 'create' | 'findByUser' | 'countByUser' | 'updateStatus' | 'findById'>
   >;
 
   beforeEach(() => {
@@ -16,6 +16,7 @@ describe('CreateMessageUseCase', () => {
       findByUser: jest.fn<Promise<Message[]>, [string, Message['status'], number, number]>(),
       countByUser: jest.fn<Promise<number>, [string, Message['status']]>(),
       updateStatus: jest.fn<Promise<void>, [string, MessageStatus]>(),
+      findById: jest.fn<Promise<Message | null>, [string]>(),
     };
     useCase = new CreateMessageUseCase(mockRepo);
     user = { userId: 'user1', username: 'user1' };
